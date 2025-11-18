@@ -1,0 +1,23 @@
+import rclpy
+from example_interfaces.srv import AddTwoInts
+from rclpy.node import Node
+
+class Server(Node):
+    def __init__(self):
+        super().__init__('server')
+        self.srv = self.create_service(AddTwoInts, 'service', self.callback)
+
+    def callback(self, req, res):
+        res.sum = req.a + req.b
+        self.get_logger().info('Incoming Request\na: %d b: %d' % (req.a, req.b))
+
+        return res
+    
+def main(args=None):
+    rclpy.init(args=args)
+    server = Server()
+    rclpy.spin(server)
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
